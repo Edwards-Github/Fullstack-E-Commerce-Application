@@ -23,4 +23,5 @@ public class ProjectConfig {
     Integer number() {
         return 16;
     }
+
 }
