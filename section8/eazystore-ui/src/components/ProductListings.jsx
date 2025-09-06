@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import ProductCard from './ProductCard';
 import SearchBox from './SearchBox';
 import Dropdown from './Dropdown';
@@ -9,6 +9,30 @@ export default function ProductListings({ products }) {
   const [searchText, setSearchText] = useState('');
   const [selectedSort, setSelectedSort] = useState('Popularity');
 
+  const filteredAndSortedProducts = useMemo(() => {
+    if (!Array.isArray(products)) {
+      return [];
+    }
+
+    let filteredProducts = products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    return filteredProducts.slice().sort((a, b) => {
+      switch (selectedSort) {
+        case 'Price Low to High':
+          return parseFloat(a.price) - parseFloat(b.price);
+        case 'Price High to Low':
+          return parseFloat(b.price) - parseFloat(a.price);
+        case 'Popularity':
+        default:
+          return parseFloat(b.popularity) - parseFloat(a.popularity);
+      }
+    });
+  }, [products, searchText, selectedSort]);
+
   function handleSearchChange(inputSearch) {
     setSearchText(inputSearch);
   }
@@ -17,33 +41,6 @@ export default function ProductListings({ products }) {
     setSelectedSort(sortType);
   }
 
-  let filteredAndSortedProducts = Array.isArray(products)
-    ? products.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchText.toLowerCase())
-      )
-    : [];
-
-  switch (selectedSort) {
-    case 'Price Low to High':
-      filteredAndSortedProducts = filteredAndSortedProducts.sort(
-        (a, b) => parseFloat(a.price) - parseFloat(b.price)
-      );
-      break;
-    case 'Price High to Low':
-      filteredAndSortedProducts = filteredAndSortedProducts.sort(
-        (a, b) => parseFloat(b.price) - parseFloat(a.price)
-      );
-      break;
-    case 'Popularity':
-      break;
-    default:
-      filteredAndSortedProducts = filteredAndSortedProducts.sort(
-        (a, b) => parseInt(b.popularity) - parseInt(a.popularity)
-      );
-      break;
-  }
   return (
     <div className="max-w-[1152px] mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-12">
