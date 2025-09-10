@@ -5,24 +5,35 @@ import {
   faSun,
   faMoon,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]); // When we mention the dependencies list as empty this means it will only be executed during the first rendering process.
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      return newTheme;
+    });
   };
 
   const navLinkClass =
-    'text-center text-lg font-primary font-semibold text-primary py-2';
+    'text-center text-lg font-primary font-semibold text-primary py-2 dark:text-light hover:text-dark dark:hover:text-lighter';
   return (
-    <header className="border-b border-gray-300 sticky top-0 z-20 bg-gray-100">
+    <header className="border-b border-gray-300 dark:border-gray-600 sticky top-0 z-20 bg-normalbg dark:bg-darkbg">
       <div className="flex items-center justify-between mx-auto max-w-[1152px] px-6 py-4">
-        <a
-          href="/"
-          className="text-center text-lg font-primary font-semibold text-primary py-2"
-        >
+        <a href="/" className={navLinkClass}>
           <FontAwesomeIcon icon={faTags} className="h-8 w-8" />
           <span className="font-bold">Eazy Stickers</span>
         </a>
@@ -60,7 +71,10 @@ const Header = () => {
             </li>
             <li>
               <a href="/cart" className="text-primary py-2">
-                <FontAwesomeIcon icon={faShoppingBasket} />
+                <FontAwesomeIcon
+                  icon={faShoppingBasket}
+                  className="dark:text-light"
+                />
               </a>
             </li>
           </ul>
