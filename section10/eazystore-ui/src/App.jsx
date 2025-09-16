@@ -2,14 +2,15 @@ import Header from './components/Header.jsx';
 import Footer from './components/footer/Footer';
 import React from 'react';
 import Home from './components/Home';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
-    <React.Fragment>
+    <>
       <Header />
-      <Home />
+      <Outlet />
       <Footer />
-    </React.Fragment>
+    </>
   );
 }
 
