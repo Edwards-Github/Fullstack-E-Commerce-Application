@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("api/v1/products")
 @RequiredArgsConstructor
@@ -22,7 +23,8 @@ public class ProductController {
     private final IProductService iProductService;
 
     @GetMapping
-    public List<ProductDto> getProducts() {
+    public List<ProductDto> getProducts() throws InterruptedException {
+        Thread.sleep(3000);
         List<ProductDto> productList = iProductService.getProducts();
         return productList;
     }

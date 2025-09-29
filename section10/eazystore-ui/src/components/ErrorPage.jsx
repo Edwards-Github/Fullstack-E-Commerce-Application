@@ -8,6 +8,12 @@ import { useRouteError } from 'react-router-dom';
 
 export default function ErrorPage() {
   const routeError = useRouteError();
+  let errorTitle = 'Oops! Something went wrong';
+  let errorMessage = 'An unexpected error occured. Please try again later.';
+  if (routeError) {
+    errorTitle = routeError.status;
+    errorMessage = routeError.data;
+  }
   return (
     <div className="flex flex-col min-h-[980px]">
       <Header />
