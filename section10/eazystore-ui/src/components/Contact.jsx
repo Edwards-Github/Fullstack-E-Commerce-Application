@@ -1,5 +1,7 @@
 import React from 'react';
 import PageTitle from './PageTitle';
+import { Form } from 'react-router-dom';
+import apiClient from '../api/apiClient';
 
 export default function Contact() {
   const labelStyle =
@@ -17,7 +19,7 @@ export default function Contact() {
       </p>
 
       {/* Contact Form */}
-      <form className="space-y-6 max-w-[768px] mx-auto">
+      <Form method="POST" className="space-y-6 max-w-[768px] mx-auto">
         {/* Name Field */}
         <div>
           <label htmlFor="name" className={labelStyle}>
@@ -96,7 +98,28 @@ export default function Contact() {
             Submit
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
+}
+
+export async function contactAction({ request, params }) {
+  const data = await request.formData();
+
+  const contactData = {
+    name: data.get('name'),
+    email: data.get('email'),
+    mobileNumber: data.get('mobileNumber'),
+    message: data.get('message'),
+  };
+
+  try {
+    await apiClient.post('/contacts', contactData);
+    return { success: 'true' };
+  } catch (error) {
+    throw new Response(
+      error.message || 'Failed to submit your message. Please try again.',
+      { status: error.status || 500 }
+    );
+  }
 }
