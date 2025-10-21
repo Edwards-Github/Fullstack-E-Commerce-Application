@@ -2,8 +2,17 @@ import React from 'react';
 import PageTitle from './PageTitle';
 import { Form } from 'react-router-dom';
 import apiClient from '../api/apiClient';
+import { useActionData } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 
 export default function Contact() {
+  const actionData = useActionData();
+  const formRef = useRef(null);
+  useEffect(() => {
+    if (actionData?.success) {
+      formRef.current?.reset();
+    }
+  }, [actionData]);
   const labelStyle =
     'block text-lg font-semibold text-primary dark:text-light mb-2';
   const textFieldStyle =
@@ -19,7 +28,11 @@ export default function Contact() {
       </p>
 
       {/* Contact Form */}
-      <Form method="POST" className="space-y-6 max-w-[768px] mx-auto">
+      <Form
+        ref={formRef}
+        method="POST"
+        className="space-y-6 max-w-[768px] mx-auto"
+      >
         {/* Name Field */}
         <div>
           <label htmlFor="name" className={labelStyle}>
@@ -115,7 +128,7 @@ export async function contactAction({ request, params }) {
 
   try {
     await apiClient.post('/contacts', contactData);
-    return { success: 'true' };
+    return { success: true };
   } catch (error) {
     throw new Response(
       error.message || 'Failed to submit your message. Please try again.',
