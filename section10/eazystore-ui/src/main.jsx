@@ -75,7 +75,7 @@ createRoot(document.getElementById('root')).render(
       newestOnTop={false}
       draggable
       pauseOnHover
-      theme={localStorage.get('theme') === 'dark' ? 'dark' : 'light'}
+      theme={localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'}
       transition={Bounce}
     />
   </StrictMode>
