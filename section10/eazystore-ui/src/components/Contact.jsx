@@ -27,7 +27,7 @@ export default function Contact() {
     );
 
     if (userConfirmed) {
-      const formData = new FormData(formRef.current); // Get form <data value
+      const formData = new FormData(formRef.current); // Get form data value
       submit(formData, { method: 'post' }); // Proceed with form submission
     } else {
       toast.info('Form submission cancelled.');
